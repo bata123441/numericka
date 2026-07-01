@@ -1,0 +1,181 @@
+//Langrange
+# Parametri
+x0, x1, x2 = -3, -1, 3
+
+def f(x):
+    return x*(x-1)
+y0, y1, y2 = f(x0), f(x1), f(x2)
+print(y0, y1, y2)
+def omega0(x):
+    return (x+1)*(x-3)
+def omega1(x):
+    return (x+3)*(x-3)
+def omega2(x):
+    return (x+3)*(x+1)
+print(omega0(x0), omega1(x1), omega2(x2))
+
+def p_L(x):
+    # TODO: prepišite konačni polinom s papira
+    return y0*(omega0(x)/omega0(x0))+y1*(omega1(x)/omega1(x1))+y2*(omega2(x)/(omega2(x2)))
+    raise NotImplementedError
+
+xi = np.array([x0, x1, x2])
+yi = np.array([y0, y1, y2])
+xp = np.linspace(x0, x2, 100)
+plt.figure(figsize=(16, 8))
+plt.plot(xi, yi, 'ro')
+plt.plot(xp,  f(xp), 'b')
+plt.plot(xp, p_L(xp), 'g')
+plt.show()
+# validation postavite kako je opisano u zadatku
+validation = True
+
+//Newton
+# Parametri
+x0, x1, x2 = -3, -1, 3
+def f(x):
+    return x*(x-1)
+y0, y1, y2 = f(x0), f(x1), f(x2)
+print(y0, y1, y2)
+def p_N(x):
+    # TODO: Prepišite Newtonov polinom prema ručnom rješenju.
+    return 12-5*(x-x0)+1*(x-x0)*(x-x1)
+    raise NotImplementedError
+print(p_N(x0), p_N(x1), p_N(x2))
+xi = np.array([x0, x1, x2])
+yi = np.array([y0, y1, y2])
+xp = np.linspace(x0, x2, 100)
+plt.figure(figsize=(16, 8))
+plt.plot(xi, yi, 'ro')
+plt.plot(xp,  f(xp), 'b')
+plt.plot(xp, p_N(xp), 'g')
+plt.show()
+# validation postavite kako je opisano u zadatku
+validation = True
+
+//gausova
+# Zadani sustav
+A = np.array([[ 1,  1, -1, -3],
+ [ 3,  4, -2, -8],
+ [-2, -1,  4,  8],
+ [-3, -6, -3,  4]], dtype=float)
+b = np.array([  7,  19, -16, -18], dtype=float)
+
+# TODO: Ovdje upišite svoje rješenje dobiveno ručno
+x_manual = [3, -2, 3, -3]
+x_check = np.linalg.solve(A, b)
+print(np.round(x_check, 2))
+# validation: True ako se vaše ručno rješenje slaže s provjerom, False ako ne,
+# None ako niste unijeli ručno rješenje ili ne želite ocijeniti
+validation = True
+
+//LU
+# Zadani sustav
+A = np.array([[ 3,   -3,   2],
+ [ -9,   6,  -3],
+ [  3, 0, -2]], dtype=float)
+b = np.array([  22,  -51, 5], dtype=float)
+P, L, U = sp.linalg.lu(A)
+print(P, "\n")
+print(np.round(L, 2), "\n")
+print(U, "\n")
+LU, Piv = sp.linalg.lu_factor(A)
+x = sp.linalg.lu_solve((LU, Piv), b)
+A_provjera = P @ L @ U
+print(A_provjera)
+print()
+print(x)
+validation = True
+
+
+
+//QR
+# Zadani A i b
+A = np.array([[ 1, -1],
+ [ 1, -3],
+ [ 1,  1],
+ [ 1,  2],
+ [ 1,  0]], dtype=float)
+b = np.array([1, 2, 3, 4, 5], dtype=float)
+Q, R = np.linalg.qr(A)
+x = np.linalg.solve(R, Q.T @ b)
+print('Q=\n', Q)
+print('R=\n', R)
+print('x=\n', np.round(x, 4))
+
+
+
+//5. PDP
+# Zadana matrica
+M = np.array([[-2,  4],
+ [ 0,  0]], dtype=float)
+n = 6
+lambda_1, lambda_2 = 1, -2
+v_1 = np.array([[2],
+                [1]]) 
+v_2 = np.array([[1],
+                [0]]) 
+
+P = np.array([[2, 1],
+              [1, 0]])
+
+D = np.array([[0, 0],
+              [0, -2]])
+Pinv = np.linalg.inv(P)
+print(Pinv)
+# Izračun M^n pomoću PDP^-1:
+D6 = np.array([[0, 0],
+                [0, 64]])
+a = M@v_1 - lambda_1*v_1
+b = M@v_2 - lambda_2*v_2
+print("\n")
+print(a)
+print(b)
+M6 = P @ D6 @ Pinv 
+print("\n")
+print(np.round(M6, 2))
+validation = True
+
+
+
+//UDV
+# TOČNA zadana matrica iz tvoje zadaće
+A = np.array([[ 1,  1,  2,  3,  4],
+              [ 2,  2,  3,  4,  5],
+              [-2,  4,  5,  6,  7]], dtype=float)
+
+# SVD dekompozicija
+U, s, V = np.linalg.svd(A)
+D = sp.linalg.diagsvd(s, 3, 5)
+
+print("U = \n", np.round(U, 2))
+print("D = \n", np.round(D, 2))
+print("V^T = \n", np.round(V, 2))
+def inv(x):
+    if not np.isclose(x, 0, atol = 10**-6):
+        return x**-1
+    else:
+        return 0    
+# Dplus matrica dimenzija 5x3
+Dplus = sp.linalg.diagsvd([inv(_) for _ in s], 5, 3)
+print("\nDplus = \n", np.round(Dplus, 4))
+
+# Izračun Moore-Penroseovog generaliziranog inverza A+
+Aplus = (V.T @ Dplus @ U.T)
+print("\nA+ = \n", Aplus)
+
+# Provjere Moore-Penroseovih uvjeta
+provjera1 = Aplus @ A @ Aplus - Aplus
+provjera2 = A @ Aplus @ A - A
+
+print("\nProvjera 1 (A+ A A+ - A+):")
+print(np.round(provjera1, 4))
+
+print("\nProvjera 2 (A A+ A - A):")
+print(np.round(provjera2, 4))
+
+validation = True
+
+
+
+

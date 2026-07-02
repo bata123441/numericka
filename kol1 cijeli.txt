@@ -71,21 +71,25 @@ validation = True
 
 //LU
 # Zadani sustav
-A = np.array([[ 3,   -3,   2],
- [ -9,   6,  -3],
- [  3, 0, -2]], dtype=float)
-b = np.array([  22,  -51, 5], dtype=float)
-P, L, U = sp.linalg.lu(A)
-print(P, "\n")
-print(np.round(L, 2), "\n")
-print(U, "\n")
-LU, Piv = sp.linalg.lu_factor(A)
-x = sp.linalg.lu_solve((LU, Piv), b)
-A_provjera = P @ L @ U
-print(A_provjera)
-print()
-print(x)
-validation = True
+A = np.array([[ -3,   1,  -1],
+ [ -3,  -1,  -2],
+ [ -9,  -3,  -5]], dtype=float)
+b = np.array([ 4,  8, 26], dtype=float)
+# Unos L i U matrica izračunatih ručno s papira
+L = np.array([[1, 0, 0],
+              [1, 1, 0],
+              [3, 3, 1]], dtype=float)
+
+U = np.array([[-3,  1, -1],
+              [ 0, -2, -1],
+              [ 0,  0,  1]], dtype=float)
+print("L @ U jednako A:\n", L @ U)
+x_check = np.linalg.solve(A, b)
+y = np.linalg.solve(L, b)
+#x_manual = [-3, -3, 2]
+
+# validation: True ako se sve poklapa
+validation = np.allclose(A, L @ U) and np.allclose(x_manual, x_check)
 
 
 
